@@ -2,23 +2,12 @@
 throttle-ms = 50
 throttle-limit = 5
 
-[bar/VGA-1]
-inherit = bar/top
-
-; Use $ xrandr -q | grep " connected" | cut -d ' ' -f1
-monitor = VGA-1
-
-modules-left   = i3
-modules-center = clock weather
-modules-right  = mail openweathermap-fullfeatured battery temperature volume
-
 [bar/top]
 monitor = eDP-1
 width = 100%
 height = 30
 
-;background = #00000000
-background = #7777777f
+background = #2F4F4F
 foreground = #ccffffff
 
 line-color = ${bar/bottom.background}
@@ -33,16 +22,11 @@ font-1 = unifont:size=6;-3
 font-2 = FontAwesome:size=8;-2
 font-3 = NotoSans-Regular:size=8;-1
 font-4 = MaterialIcons:size=10;-1
-font-5 = Weather Icons:size=10;1
+font-5 = Weather Icons:style=Regular:size=10;1
 
-modules-left = powermenu mpd
-modules-right = volume backlight wireless-network wired-network battery date
-
-tray-position = center
-tray-padding = 0
-tray-maxsize = 12
-wm-restack = i3
-override-redirect = false
+modules-left = 
+modules-center = date openweathermap-fullfeatured
+modules-right = wireless-network wired-network battery
 
 [bar/bottom]
 monitor = eDP-1
@@ -63,13 +47,46 @@ module-margin-right = 6
 
 font-0 = NotoSans-Regular:size=8;0
 font-1 = unifont:size=6;-3
-font-2 = FontAwesome:size=8;-2
+font-2 = FontAwesome:size=10;0
 font-3 = NotoSans-Regular:size=8;-1
 font-4 = MaterialIcons:size=10;-1
-font-5 = Weather Icons:size=10;1
+font-5 = Weather Icons::style=Regularsize=10;1
 
 modules-left = i3
-modules-right = cpu temperature memory
+modules-right = cpu temperature memory filesystem
+
+tray-position = center
+tray-padding = 0
+tray-maxsize = 10
+wm-restack = i3
+override-redirect = false
+
+[bar/VGA-1]
+inherit = bar/top
+
+; Use $ xrandr -q | grep " connected" | cut -d ' ' -f1
+monitor = VGA-1
+
+modules-left   = i3
+modules-center = clock
+modules-right  = openweathermap-fullfeatured battery temperature volume
+
+[bar/laptop-top]
+inherit = bar/top
+
+modules-left = i3
+modules-right = clock
+
+tray-position = right
+tray-padding = 0
+tray-maxsize = 10
+wm-restack = i3
+override-redirect = false
+
+[bar/laptop-bottom]
+inherit = bar/bottom
+
+modules-right = openweathermap-fullfeatured wireless-network battery temperature volume
 
 [module/i3]
 type = internal/i3
@@ -144,7 +161,8 @@ label-focused-padding = 4
 ;   %index%
 ;   %output%
 ; Default: %icon%  %name%
-label-unfocused = %icon% %name%
+;label-unfocused = %icon% %name%
+label-unfocused = %name%
 label-unfocused-padding = 4
 
 ; Available tokens:
@@ -153,7 +171,7 @@ label-unfocused-padding = 4
 ;   %index%
 ;   %output%
 ; Default: %icon%  %name%
-label-visible = %icon% %name%
+label-visible = %name%
 label-visible-underline = #555555
 label-visible-padding = 4
 
@@ -224,76 +242,6 @@ animation-charging-3 = 
 animation-charging-4 = 
 animation-charging-framerate = 750
 
-[module/bspwm]
-type = internal/bspwm
-
-ws-icon-0 = term;
-ws-icon-1 = web;
-ws-icon-2 = code;
-ws-icon-3 = music;
-ws-icon-4 = irssi;
-ws-icon-default = 
-
-format = <label-state> <label-mode>
-
-label-dimmed-underline = ${BAR.background}
-
-label-active = %icon%
-label-active-foreground = #fff
-label-active-background = #773f3f3f
-label-active-underline = #c9665e
-label-active-font = 4
-label-active-padding = 4
-
-label-occupied = %icon%
-label-occupied-foreground = #dd
-label-occupied-underline = #666
-label-occupied-font = 4
-label-occupied-padding = 4
-
-label-urgent = %icon%
-label-urgent-foreground = #000000
-label-urgent-background = #bd2c40
-label-urgent-underline = #9b0a20
-label-urgent-font = 4
-label-urgent-padding = 4
-
-label-empty = %icon%
-label-empty-foreground = #55
-label-empty-font = 4
-label-empty-padding = 4
-
-label-monocle = 
-label-monocle-underline = ${module/bspwm.label-active-underline}
-label-monocle-background = #33ffffff
-label-monocle-padding = 2
-
-label-locked = 
-label-locked-foreground = #bd2c40
-label-locked-underline = ${module/bspwm.label-monocle-underline}
-label-locked-padding = ${module/bspwm.label-monocle-padding}
-
-label-sticky = 
-label-sticky-foreground = #fba922
-label-sticky-underline = ${module/bspwm.label-monocle-underline}
-label-sticky-padding = ${module/bspwm.label-monocle-padding}
-
-label-private = 
-label-private-foreground = #bd2c40
-label-private-underline = ${module/bspwm.label-monocle-underline}
-label-private-padding = ${module/bspwm.label-monocle-padding}
-
-[module/bspwm-tmp]
-type = internal/bspwm
-format = <label-state>
-
-label-active = 
-label-active-padding = 1
-label-occupied = 
-label-occupied-padding = 1
-label-empty = 
-label-empty-padding = 1
-
 [module/cpu]
 type = internal/cpu
 interval = 0.5
@@ -327,27 +275,43 @@ ramp-coreload-7-foreground = #ff5555
 
 [module/date]
 type = internal/date
-date =    %%{F#88}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
+date = %%{F#88}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 date-alt = %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F#666}:%%{F#fba922}%S%%{F-}
+
+[module/filesystem]
+type = internal/fs
+
+; Mountpoints to display
+mount-0 = /
+label-mounted = SSD  %percentage_free%% free
+
+; Seconds to sleep between updates
+interval = 10
+
+; Display fixed precision values
+fixed-values = true
+
+; Spacing between entries
+spacing = 4
 
 [module/memory]
 type = internal/memory
 format = <label> <bar-used>
 label = RAM
 
-bar-used-width = 30
+bar-used-width = 10
 bar-used-foreground-0 = #aaff77
 bar-used-foreground-1 = #aaff77
 bar-used-foreground-2 = #fba922
 bar-used-foreground-3 = #ff5555
 bar-used-indicator = |
-bar-used-indicator-font = 6
+bar-used-indicator-font = 1
 bar-used-indicator-foreground = #ff
 bar-used-fill = ─
-bar-used-fill-font = 6
+bar-used-fill-font = 1
 bar-used-empty = ─
-bar-used-empty-font = 6
-bar-used-empty-foreground = #444444
+bar-used-empty-font = 1
+bar-used-empty-foreground = #111111
 
 [module/mpd]
 type = internal/mpd
@@ -382,30 +346,16 @@ interface = wlp3s0
 interval = 3.0
 ping-interval = 10
 
-format-connected = <ramp-signal> <label-connected>
-label-connected = %essid%
-label-disconnected =    not connected
+format-connected = <ramp-signal><label-connected>
+label-connected = %essid% | %signal%%
+label-disconnected = Not Connected
 label-disconnected-foreground = #66
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
-
-animation-packetloss-0 = 
-animation-packetloss-0-foreground = #ffa64c
-animation-packetloss-1 = 
-animation-packetloss-1-foreground = ${bar/top.foreground}
-animation-packetloss-framerate = 500
-
-[module/wired-network]
-type = internal/network
-interface = net0
-interval = 3.0
-
-label-connected =    %{T3}%local_ip%%{T-}
-label-disconnected-foreground = #66
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
 
 [module/volume]
 type = internal/alsa
@@ -422,44 +372,12 @@ ramp-volume-1 = 
 ramp-volume-2 = 
 ramp-volume-3 = 
 
-[module/powermenu]
-type = custom/menu
-
-format-padding = 5
-
-label-open = 
-label-close = 
-
-menu-0-0 = Terminate WM
-menu-0-0-foreground = #fba922
-menu-0-0-exec = bspc quit -1
-menu-0-1 = Reboot
-menu-0-1-foreground = #fba922
-menu-0-1-exec = menu_open-1
-menu-0-2 = Power off
-menu-0-2-foreground = #fba922
-menu-0-2-exec = menu_open-2
-
-menu-1-0 = Cancel
-menu-1-0-foreground = #fba922
-menu-1-0-exec = menu_open-0
-menu-1-1 = Reboot
-menu-1-1-foreground = #fba922
-menu-1-1-exec = sudo reboot
-
-menu-2-0 = Power off
-menu-2-0-foreground = #fba922
-menu-2-0-exec = sudo poweroff
-menu-2-1 = Cancel
-menu-2-1-foreground = #fba922
-menu-2-1-exec = menu_open-0
-
 [module/temperature]
 type = internal/temperature
 
 interval = 0.5
 thermal-zone = 0
-hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input
 base-temperature = 20
 warn-temperature = 60
 units = true
@@ -469,7 +387,7 @@ format = <ramp> <label>
 ; Available tags:
 ;   <label-warn> (default)
 ;   <ramp>
-format-warn = <ramp>  <label-warn>
+format-warn = <ramp> <label-warn>
 
 ; Available tokens:
 ;   %temperature% (deprecated)
@@ -481,16 +399,16 @@ label = %temperature-c%
 ;   %temperature% (deprecated)
 ;   %temperature-c%   (default, temperature in °C)
 ;   %temperature-f%   (temperature in °F)
-label-warn = TEMP %temperature-c%
+label-warn = %temperature-c%
 label-warn-foreground = #f00
 
 ; Requires the <ramp> tag
 ; The icon selection will range from `base-temperature` to `warn-temperature`,
 ; temperatures above `warn-temperature` will use the last icon
 ; and temperatures below `base-temperature` will use `ramp-0`
-ramp-0 = A
-ramp-1 = B
-ramp-2 = C
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
 ramp-foreground = #55
 
 [module/clock]
@@ -502,7 +420,4 @@ date = %%{F#999}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 type = custom/script
 exec = ~/.config/polybar/openweathermap-fullfeatured.sh
 interval = 600
-label-font = 5
-
-; vim:ft=dosini
-
+label-font = 6
